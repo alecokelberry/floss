@@ -1,0 +1,24 @@
+# Supply-chain protection: a new version waits a day before it installs, a recent release may not have weaker
+# provenance than the releases before it (how account takeovers show), dependencies can't come from git or
+# tarball URLs, and install scripts run only for packages approved below (`pnpm approve-builds`).
+minimumReleaseAge: 1440
+# Same-day security releases only (e.g. next, "@next/*"), removed once they're a day old
+minimumReleaseAgeExclude:
+  # A same-day Next.js release at scaffold time: remove after 2026-10-02
+  - next
+  - "@next/*"
+trustPolicy: no-downgrade
+# Only releases from the last 30 days: old backports (e.g. semver@6.3.1) often lack the attestation newer
+# releases have, and a takeover shows up as a fresh release
+trustPolicyIgnoreAfter: 43200
+blockExoticSubdeps: true
+strictDepBuilds: true
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
+  msw: false
+  esbuild: true
+overrides:
+  # drizzle-kit 0.31's @esbuild-kit loader pins esbuild 0.18 (GHSA-67mh-4wv8-2f99, dev-server only, not used
+  # here); the patched line works with it. Remove once drizzle-kit drops @esbuild-kit.
+  "@esbuild-kit/core-utils>esbuild": ^0.25.0
