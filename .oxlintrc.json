@@ -1,0 +1,115 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": [
+    "typescript",
+    "unicorn",
+    "oxc",
+    "react",
+    "nextjs",
+    "jsx-a11y",
+    "import",
+    "promise",
+    "vitest"
+  ],
+  "categories": {
+    "correctness": "error",
+    "suspicious": "warn",
+    "perf": "warn"
+  },
+  "options": {
+    "typeAware": true,
+    "reportUnusedDisableDirectives": "warn"
+  },
+  "rules": {
+    "typescript/no-floating-promises": "error",
+    "typescript/no-misused-promises": "error",
+    "typescript/await-thenable": "error",
+    "typescript/switch-exhaustiveness-check": "error",
+    "typescript/no-unnecessary-condition": "warn",
+    "typescript/consistent-type-imports": "warn",
+    "react/rules-of-hooks": "error",
+    // Table cells hold controls; they aren't one (jsx-a11y's recommended set ignores these elements too)
+    "jsx-a11y/control-has-associated-label": [
+      "error",
+      {
+        "ignoreElements": [
+          "audio",
+          "canvas",
+          "embed",
+          "input",
+          "textarea",
+          "tr",
+          "td",
+          "th",
+          "video"
+        ]
+      }
+    ],
+    "react/exhaustive-deps": "warn",
+    "import/no-cycle": "error",
+    "no-console": [
+      "warn",
+      {
+        "allow": ["warn", "error", "info"]
+      }
+    ],
+    "react/react-in-jsx-scope": "off",
+    "import/no-unassigned-import": [
+      "warn",
+      {
+        "allow": ["**/*.css", "server-only", "./src/lib/env"]
+      }
+    ],
+    "react/no-unstable-nested-components": [
+      "warn",
+      {
+        "allowAsProps": true
+      }
+    ],
+    // Select and radio handlers hand back `string`; casting to the union the options came from is the pattern
+    "typescript/no-unsafe-type-assertion": "off",
+    // Exhaustive switches over unions return on every path; switch-exhaustiveness-check already enforces it
+    "typescript/consistent-return": "off",
+    // Immutable updates (`xs.map((x) => ({ ...x, done }))`) are how React state changes
+    "oxc/no-map-spread": "off",
+    // Small helpers read best beside the one component or test that uses them
+    "unicorn/consistent-function-scoping": "off",
+    // role="img" on a chart or role="group" on a field row is correct ARIA; the tags it suggests change meaning
+    "jsx-a11y/prefer-tag-over-role": "off",
+    // A sheet or dialog focuses its first field when it opens, as its title says it will
+    "jsx-a11y/no-autofocus": "off",
+    // Scrollable regions take tabIndex={0} so keyboards can scroll them (axe: scrollable-region-focusable)
+    "jsx-a11y/no-noninteractive-tabindex": "off",
+    // expect(value, message) is Vitest API
+    "vitest/valid-expect": [
+      "error",
+      {
+        "maxArgs": 2
+      }
+    ]
+  },
+  "env": {
+    "builtin": true,
+    "browser": true,
+    "node": true
+  },
+  "ignorePatterns": ["src/components/ui/**", "drizzle/**", ".next/**"],
+  "overrides": [
+    {
+      // Command-line scripts talk on the console
+      "files": ["scripts/**"],
+      "rules": { "no-console": "off" }
+    },
+    {
+      // A transaction holds one connection and runs one statement at a time: writes in a loop are sequential on purpose
+      "files": ["src/db/**", "src/app/actions/**"],
+      "rules": { "no-await-in-loop": "off" }
+    },
+    {
+      "files": ["e2e/**"],
+      "rules": {
+        "react/rules-of-hooks": "off"
+      }
+    }
+  ]
+}
