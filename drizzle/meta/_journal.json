@@ -1,0 +1,55 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1790639152439,
+      "tag": "0000_tricky_random",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1790639159824,
+      "tag": "0001_data_version",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1790642981405,
+      "tag": "0002_patient_removed_at",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1790643614586,
+      "tag": "0003_practitioner_photo",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1790644158284,
+      "tag": "0004_invoice_bill",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1790644943112,
+      "tag": "0005_procedure_price_cents",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790805272909,
+      "tag": "0006_dental",
+      "breakpoints": true
+    }
+  ]
+}
