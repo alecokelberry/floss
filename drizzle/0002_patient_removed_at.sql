@@ -1,0 +1,1 @@
+ALTER TABLE "patients" ADD COLUMN "removed_at" timestamp (3) with time zone;
