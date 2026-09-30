@@ -50,6 +50,12 @@ import { removeRetiredStaff, seedStaff } from "./seed-staff"
 
 type Db = PgDatabase<PgQueryResultHKT>
 
+/**
+ * Which practice the seed lays out. Bump it when the seed changes, and a deployed demo reseeds on its next page load
+ * instead of waiting for tomorrow (`ensureFreshDay`). Stored as the `seed_version` settings row.
+ */
+export const SEED_VERSION = 2
+
 const LUNCH_MINUTES = 45
 /** A chair's first visit of the day; later ones follow with a gap */
 const DAY_START = 8 * 60 + 30
@@ -282,7 +288,10 @@ export async function seedClinic(
 
   await db
     .insert(settings)
-    .values(SETTING_KEYS.map((key) => ({ key, value: DEFAULT_SETTINGS[key] })))
+    .values([
+      ...SETTING_KEYS.map((key) => ({ key, value: DEFAULT_SETTINGS[key] })),
+      { key: "seed_version", value: SEED_VERSION },
+    ])
   await db.insert(demoDay).values({
     id: 1,
     seededAt: new Date(real),

@@ -5,12 +5,21 @@ import { eq } from "drizzle-orm"
 import { cache } from "react"
 
 import { db } from "@/db"
-import { demoDay } from "@/db/schema"
-import { seedClinic } from "@/db/seed"
+import { demoDay, settings } from "@/db/schema"
+import { SEED_VERSION, seedClinic } from "@/db/seed"
 import { staleReason } from "@/lib/clock"
 
 const readDay = async () =>
   (await db.select().from(demoDay).where(eq(demoDay.id, 1)))[0]
+
+/** Whether the stored practice came from an older seed than this deploy's */
+const olderSeed = async () => {
+  const [row] = await db
+    .select({ value: settings.value })
+    .from(settings)
+    .where(eq(settings.key, "seed_version"))
+  return row?.value !== SEED_VERSION
+}
 
 /** The reseed under way, if any: a second one waits for it rather than interleaving with it */
 let reseeding: Promise<unknown> = Promise.resolve()
@@ -36,9 +45,10 @@ function ensureFreshDemoDay(): Promise<string | null> {
   checking ??= (async () => {
     await reseeding
     const day = await readDay()
-    const reason = day
-      ? staleReason(day.clinicStart, Date.now())
-      : "no demo day yet"
+    const reason = !day
+      ? "no demo day yet"
+      : (staleReason(day.clinicStart, Date.now()) ??
+        ((await olderSeed()) ? "a newer practice" : null))
     if (reason) await reseed()
     return reason
   })().finally(() => {
