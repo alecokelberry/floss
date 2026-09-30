@@ -30,13 +30,8 @@ The `*.vercel.app` URLs already work for sign-in (see `src/lib/auth.ts`).
 
 ## 4. Make the tables
 
-Run the migrations once from your machine against the direct URL (copy it from Neon):
-
-```bash
-DATABASE_URL_UNPOOLED="postgresql://…" pnpm db:migrate
-```
-
-Do the same whenever a new file shows up in `drizzle/`.
+Nothing to do. `vercel.json` runs `pnpm db:migrate` before every build, over the direct URL, so new files in
+`drizzle/` get applied on the next deploy.
 
 ## 5. Deploy
 
@@ -44,11 +39,11 @@ Push to `main` and Vercel builds it. The first request seeds the practice around
 
 ## If something's off
 
-| Problem                       | Fix                                                               |
-| ----------------------------- | ----------------------------------------------------------------- |
-| Sign-in fails with a 403      | Custom domain? Set `BETTER_AUTH_URL` to it and redeploy           |
-| `relation … does not exist`   | The migrations didn't run against this database, run step 4 again |
-| Build fails on env validation | A variable is missing in that environment (Preview vs Production) |
+| Problem                       | Fix                                                                                       |
+| ----------------------------- | ----------------------------------------------------------------------------------------- |
+| Sign-in fails with a 403      | Custom domain? Set `BETTER_AUTH_URL` to it and redeploy                                   |
+| `relation … does not exist`   | The migrations didn't run against this database, check the build log for the migrate step |
+| Build fails on env validation | A variable is missing in that environment (Preview vs Production)                         |
 
 ## Running it locally
 
